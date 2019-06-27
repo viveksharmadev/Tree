@@ -11,6 +11,7 @@
  */
 class cousins-in-binary-tree {
     // tc -> n, sc-> n
+    // Using HashMap
     public boolean isCousins(TreeNode root, int x, int y) {
         Map<Integer, int[]> map = new HashMap<>();
         buildMap(root, x, 0, null, map);
@@ -27,5 +28,30 @@ class cousins-in-binary-tree {
         }
         buildMap(node.left, val, level+1, node, map);
         buildMap(node.right, val, level+1, node, map);
+    }  
+    
+    // Using Object
+    // tc -> n, sc-> n
+    class Node{
+        int depth;
+        TreeNode parent;
+    }
+    
+    public boolean isCousins(TreeNode root, int x, int y) {
+        Node node1 = getCousineNode(new Node(), root, x, 0, null);
+        Node node2 = getCousineNode(new Node(), root, y, 0, null);
+        return node1.parent!=node2.parent && node1.depth==node2.depth;
+    }
+    
+    private Node getCousineNode(Node node, TreeNode root, int val, int level, 
+                               TreeNode parent){
+        if(root==null) return null;
+        if(root.val==val){
+            node.parent = parent;
+            node.depth = level;
+        }
+        getCousineNode(node, root.left, val, level+1, root);
+        getCousineNode(node, root.right, val, level+1, root);
+        return node;
     }    
 }
